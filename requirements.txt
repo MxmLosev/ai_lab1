@@ -1,0 +1,35 @@
+# Зависимости Fish-Dimensions-Regression-Analysis для Python 3.9
+# Версии взяты из Pipfile.lock (по выводу pipenv install),
+# недостающие закреплены на версиях начала 2022 г., совместимых между собой.
+
+# --- Приложение (из Pipfile.lock) ---
+dash==2.1.0
+dash-core-components==2.0.0
+dash-html-components==2.0.0
+dash-table==5.0.0
+dash-bootstrap-components==1.0.3
+flask==2.0.3
+flask-compress==1.10.1
+brotli==1.0.9
+gunicorn==20.1.0
+click==8.0.3
+colorama==0.4.4
+itsdangerous==2.0.1
+jinja2==3.0.3
+markupsafe==2.0.1
+packaging==21.3
+pandas==1.3.5
+
+# --- Закреплены вручную (в выводе установки версий не было) ---
+werkzeug==2.0.3      # Flask 2.0 ломается с Werkzeug 3.x
+plotly==5.6.0        # dash 2.1 требует plotly 5.x
+numpy==1.21.6        # pandas 1.3.5 несовместима с numpy 2.x
+scipy==1.7.3
+statsmodels==0.13.2
+patsy==0.5.2
+
+# --- Для исследовательского анализа (добавлено) ---
+notebook==7.5.7
+matplotlib==3.8.4
+seaborn==0.13.2
+pytest==8.4.2
