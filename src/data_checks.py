@@ -128,3 +128,58 @@ def run_row_checks(df: pd.DataFrame) -> pd.DataFrame:
         rows.append({"check": name, "n_rows": found.index.nunique(),
                      "rows": sorted(found.index.unique().tolist())})
     return pd.DataFrame(rows)
+
+
+# ---------------------------------------------------------------------------
+# Выбросы (шаг 5). Границы считаются внутри групп (по умолчанию — по виду),
+# т.к. масса и размеры сильно зависят от вида.
+# ВАЖНО: при моделировании границы нужно оценивать только на обучающей выборке.
+# ---------------------------------------------------------------------------
+
+def iqr_bounds(s: pd.Series, k: float = 1.5) -> pd.Series:
+    """Границы Q1 - k*IQR и Q3 + k*IQR для одного ряда."""
+    q1, q3 = s.quantile([0.25, 0.75])
+    iqr = q3 - q1
+    return pd.Series({"q1": q1, "q3": q3, "iqr": iqr,
+                      "low": q1 - k * iqr, "high": q3 + k * iqr})
+
+
+def iqr_flags(df: pd.DataFrame, col: str, group: str = "Species",
+              k: float = 1.5) -> pd.Series:
+    """True для строк, где значение col вне границ IQR своей группы."""
+
+    def _flag(s):
+        b = iqr_bounds(s, k)
+        return (s < b["low"]) | (s > b["high"])
+
+    return df.groupby(group)[col].transform(_flag).astype(bool)
+
+
+def mad_z(df: pd.DataFrame, col: str, group: str = "Species") -> pd.Series:
+    """Устойчивая z-оценка 0.6745 * (x - медиана) / MAD внутри группы.
+
+    Если MAD группы равен 0 (больше половины значений одинаковы),
+    z не определена и возвращается NaN.
+    """
+
+    def _z(s):
+        med = s.median()
+        mad = (s - med).abs().median()
+        if mad == 0:
+            return pd.Series(np.nan, index=s.index)
+        return 0.6745 * (s - med) / mad
+
+    return df.groupby(group)[col].transform(_z)
+
+
+def outlier_table(df: pd.DataFrame, col: str, group: str = "Species",
+                  k: float = 1.5, z_thr: float = 3.5) -> pd.DataFrame:
+    """Строки, помеченные IQR или MAD, с указанием, какой метод сработал."""
+    out = df[[group, col]].copy()
+    out["iqr_flag"] = iqr_flags(df, col, group, k)
+    out["mad_z"] = mad_z(df, col, group).round(2)
+    out["mad_flag"] = out["mad_z"].abs() > z_thr
+    out["agreement"] = np.select(
+        [out["iqr_flag"] & out["mad_flag"], out["iqr_flag"], out["mad_flag"]],
+        ["оба метода", "только IQR", "только MAD"], default="")
+    return out[out["iqr_flag"] | out["mad_flag"]]
