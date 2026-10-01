@@ -272,3 +272,12 @@ Width — ≈ 0,89, Height — ≈ 0,72). Коэффициенты Спирме�
 Оценки для Whitefish (6 рыб) и Parkki (11) ненадёжны из-за малого числа
 наблюдений. Строка 40 исключена (логарифм нуля не определён).
 Следствие для модели: использовать log(масса), log(длины) и вид.
+
+## Тесты
+    python -m pytest tests/ -v
+
+## Материалы
+- Отчёт: `reports/lab01-report.md`
+- Блокнот: `notebooks/01-eda.ipynb`
+- Модули: `src/data_checks.py`, `src/splitting.py`
+- Разбиение: `data/split_lab01.csv`
