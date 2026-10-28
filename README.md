@@ -1,3 +1,50 @@
+# ЛР2. FishGrow: прогностическая модель массы рыбы и MLflow
+
+Регрессия массы рыбы (`Weight`, г) по размерам и виду. Сравнение E0–E4, учёт экспериментов в MLflow.
+
+## Установка (Windows, PowerShell)
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+## Запуск
+Все команды выполняются из корня репозитория.
+
+| Действие | Команда |
+|---|---|
+| Обучение E0–E4, запись в MLflow | `python -m src.train` |
+| Анализ ошибок | `python -m src.evaluate` |
+| Тесты | `python -m pytest -v` |
+| Интерфейс MLflow | `mlflow ui --backend-store-uri sqlite:///mlflow.db` → http://127.0.0.1:5000 |
+
+## Структура
+- `configs/base.yaml`: путь к данным, признаки, seed, параметры разбиения, MLflow
+- `src/data.py`: загрузка данных, замороженное разбиение train/test (`data/split.json`)
+- `src/pipelines.py`: цепочка предобработки и модели (ColumnTransformer + регрессор)
+- `src/train.py`: эксперименты E0–E4, перекрёстная проверка, логирование в MLflow
+- `src/evaluate.py`: анализ остатков и ошибок, VIF, тест Бройша-Пагана
+- `tests/`: минимальные тесты
+- `reports/lab02-report.md`: отчёт; `reports/experiments.csv`: экспорт метрик всех запусков
+- `models/model-card.md`: паспорт модели; `models/best_model.joblib`: лучшая модель
+
+## Воспроизводимость
+Данные: `assets/data/Fish.csv`, версия (md5[:12]) `500c90abecca`. Seed 42.
+Индексы тестовой выборки зафиксированы в `data/split.json` и не пересоздаются.
+
+## Загрузка модели
+```python
+import joblib, pandas as pd
+model = joblib.load("models/best_model.joblib")
+X = pd.DataFrame([{"Species": "Perch", "Length1": 25.0, "Length2": 27.0,
+                   "Length3": 28.5, "Height": 7.5, "Width": 4.4}])
+print(model.predict(X))
+```
+
+---
+
+
 # Fish Dimensions Regression Analysis
 
 ### Introduction
