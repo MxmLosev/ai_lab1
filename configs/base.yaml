@@ -1,0 +1,13 @@
+data:
+  path: assets/data/Fish.csv
+  target: Weight
+  categorical: [Species]
+  numeric: [Length1, Length2, Length3, Height, Width]
+split:
+  test_size: 0.2
+  seed: 42
+  cv_folds: 5
+  split_file: data/split.json
+mlflow:
+  experiment: fishgrow-lab02
+  tracking_uri: file:./mlruns
