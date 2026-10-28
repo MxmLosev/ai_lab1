@@ -194,10 +194,10 @@ def main():
     X_test, _ = get_xy(df, test_idx, cfg)
     with mlflow.start_run(run_id=best["run_id"]):
         mlflow.set_tag("best_model", "true")
-        try:
-            mlflow.sklearn.log_model(best["pipeline"], name="model", input_example=X_test.head(3))
-        except TypeError:  # MLflow 2.x
-            mlflow.sklearn.log_model(best["pipeline"], artifact_path="model", input_example=X_test.head(3))
+        mlflow.sklearn.log_model(
+            best["pipeline"], name="model", input_example=X_test.head(3),
+            skops_trusted_types=["numpy.dtype", "src.pipelines.add_volume"],
+        )
         if Path("models/model-card.md").exists():
             mlflow.log_artifact("models/model-card.md")
 

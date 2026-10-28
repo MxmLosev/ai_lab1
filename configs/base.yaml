@@ -10,4 +10,4 @@ split:
   split_file: data/split.json
 mlflow:
   experiment: fishgrow-lab02
-    tracking_uri: sqlite:///mlflow.db
+  tracking_uri: sqlite:///mlflow.db
