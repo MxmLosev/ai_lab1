@@ -104,3 +104,16 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+
+# --- Добавлено в lab/01-eda ---
+# IDE
+.idea/
+.vscode/
+
+# Временные результаты запусков
+runs/
+
+# Системные файлы Windows
+Thumbs.db
+desktop.ini

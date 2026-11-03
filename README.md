@@ -1,3 +1,57 @@
+# Лабораторная работа №1: исследовательский анализ данных FishGrow
+
+Форк проекта [Fish-Dimensions-Regression-Analysis](https://github.com/tylerrussin/Fish-Dimensions-Regression-Analysis),
+исходный коммит `1f65547b63c3043e2dcfff0c6435afa993331d4e` (2022-02-25). Ветка: `lab/01-eda`.
+
+## 1. Данные
+Файл `assets/data/Fish.csv` входит в репозиторий, дополнительная загрузка не нужна.
+Проверка целостности (PowerShell):
+
+> Get-FileHash assets\data\Fish.csv -Algorithm SHA256
+
+Ожидаемый SHA256: `8DADA2C9E9AF1034667670120F6782FA9500320CC85461095554AC7E3AABBE0E`
+
+## 2. Окружение
+Проверено: Windows 11, Python 3.9.13.
+Исходный Pipfile требует Python 3.7, который недоступен; на Python 3.12
+зависимости не устанавливаются (см. отчёт, раздел «Исходное состояние и запуск»).
+
+> python -m venv .venv
+
+> .venv\Scripts\activate          # Linux/macOS: source .venv/bin/activate
+
+> pip install -r requirements.txt
+
+## 3. Базовое решение (исходное приложение)
+
+> python run.py
+
+Открыть http://127.0.0.1:8050 — главная страница и страница Predictions.
+
+## 4. Исследовательский анализ
+
+> python -m notebook
+
+Открыть `notebooks/01-eda.ipynb`, выполнить Kernel → Restart & Run All.
+
+Контрольные результаты для сверки:
+- таблица 159 × 7, пропусков нет;
+- Weight: среднее ≈ 398,3 г, максимум 1650 г;
+- аномалия: строка 40 (Roach), Weight = 0;
+- SEED = 42.
+
+## 5. Тесты
+
+> python -m pytest tests/
+
+## 6. Материалы
+- Отчёт: `reports/lab01-report.md`
+- Графики: `reports/figures/`
+- Проверки данных: `src/data_checks.py`
+
+---
+*Ниже — исходный README автора без изменений.*
+
 # Fish Dimensions Regression Analysis
 
 ### Introduction
